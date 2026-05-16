@@ -8,9 +8,9 @@ BOT_TOKEN = "8794844755:AAHA6yvFrM2rEm6A2II1LlenrFOl8ZjfGVE"
 
 app = Client("almtmrd_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
-# النص الفخم الذي طلبته (نفس الصورة بالضبط)
+# نص القائمة الرئيسية
 MENU_TEXT = """
-أهلاً بك عزيزي في قائمة الاوامر :
+**- أهلاً بك عزيزي في قائمة الاوامر :**
 ━━━━━━━━━━━━
 ◂ م1 : اوامر الادمنيه
 ◂ م2 : اوامر الاعدادات
@@ -21,34 +21,33 @@ MENU_TEXT = """
 ━━━━━━━━━━━━
 """
 
-# تصميم الأزرار الشفافة
+# تصحيح الأزرار (أقواس كاملة ومربعة)
 START_BUTTONS = InlineKeyboardMarkup(
     [
         [InlineKeyboardButton("م1", callback_data="m1"), InlineKeyboardButton("م2", callback_data="m2"), InlineKeyboardButton("م3", callback_data="m3")],
         [InlineKeyboardButton("م4", callback_data="m4"), InlineKeyboardButton("م5", callback_data="m5"), InlineKeyboardButton("م6", callback_data="m6")],
-        [InlineKeyboardButton("• قـناة الـسورس •", url="t.me/A0_07")]
+        [InlineKeyboardButton("• قـناة الـسورس •", url="https://t.me/A0_07")]
     ]
 )
 
 @app.on_message(filters.command("الاوامر") | filters.command("start"))
 async def start(client, message):
-    # إرسال القائمة مع الأزرار
     await message.reply_text(MENU_TEXT, reply_markup=START_BUTTONS)
 
 @app.on_callback_query()
 async def cb_handler(client, query: CallbackQuery):
     if query.data == "m1":
-        # هنا تضع أوامر الإدمنية التي أرسلتها لي
-        await query.message.edit_text("""
-- قائمة اوامر الادمنيه
-━━━━━━━━━━━━ 
+        admin_text = """
+**- قائمة اوامر الادمنيه**
+━━━━━━━━━━━━
 • رفع - تنزيل مالك اساسي
 • رفع - تنزيل مالك
 • رفع - تنزيل مشرف
 • رفع - تنزيل مدير
 • تنزيل الكل
 ━━━━━━━━━━━━
-""", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("رجوع", callback_data="main")]]))
+"""
+        await query.message.edit_text(admin_text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("رجوع", callback_data="main")]]))
     
     elif query.data == "main":
         await query.message.edit_text(MENU_TEXT, reply_markup=START_BUTTONS)
