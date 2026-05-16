@@ -1,5 +1,5 @@
 from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 # بياناتك الصحيحة
 API_ID = 22610186
@@ -8,7 +8,6 @@ BOT_TOKEN = "8794844755:AAHA6yvFrM2rEm6A2II1LlenrFOl8ZjfGVE"
 
 app = Client("almtmrd_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
-# نص القائمة الرئيسية
 MENU_TEXT = """
 **- أهلاً بك عزيزي في قائمة الاوامر :**
 ━━━━━━━━━━━━
@@ -21,7 +20,6 @@ MENU_TEXT = """
 ━━━━━━━━━━━━
 """
 
-# تصحيح الأزرار (أقواس كاملة ومربعة)
 START_BUTTONS = InlineKeyboardMarkup(
     [
         [InlineKeyboardButton("م1", callback_data="m1"), InlineKeyboardButton("م2", callback_data="m2"), InlineKeyboardButton("م3", callback_data="m3")],
@@ -30,27 +28,10 @@ START_BUTTONS = InlineKeyboardMarkup(
     ]
 )
 
-@app.on_message(filters.command("الاوامر") | filters.command("start"))
+@app.on_message(filters.command(["start", "الاوامر"]))
 async def start(client, message):
     await message.reply_text(MENU_TEXT, reply_markup=START_BUTTONS)
 
-@app.on_callback_query()
-async def cb_handler(client, query: CallbackQuery):
-    if query.data == "m1":
-        admin_text = """
-**- قائمة اوامر الادمنيه**
-━━━━━━━━━━━━
-• رفع - تنزيل مالك اساسي
-• رفع - تنزيل مالك
-• رفع - تنزيل مشرف
-• رفع - تنزيل مدير
-• تنزيل الكل
-━━━━━━━━━━━━
-"""
-        await query.message.edit_text(admin_text, reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("رجوع", callback_data="main")]]))
-    
-    elif query.data == "main":
-        await query.message.edit_text(MENU_TEXT, reply_markup=START_BUTTONS)
-
-# سطر التشغيل الأساسي
-app.run()
+# السطر المصلح لتجنب خطأ الـ Runtime
+if __name__ == "__main__":
+    app.run()
