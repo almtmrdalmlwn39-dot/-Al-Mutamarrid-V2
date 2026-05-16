@@ -1,8 +1,7 @@
-import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 
-# بياناتك
+# بياناتك الصحيحة
 API_ID = 22610186
 API_HASH = "184e7fd176413cd0d2425494f1796229"
 BOT_TOKEN = "8794844755:AAHA6yvFrM2rEm6A2II1LlenrFOl8ZjfGVE"
@@ -21,7 +20,6 @@ MENU_TEXT = """
 ━━━━━━━━━━━━
 """
 
-# الأزرار (مصلحة بالكامل)
 START_BUTTONS = InlineKeyboardMarkup(
     [
         [InlineKeyboardButton("م1", callback_data="m1"), InlineKeyboardButton("م2", callback_data="m2"), InlineKeyboardButton("م3", callback_data="m3")],
@@ -37,10 +35,11 @@ async def start(client, message):
 @app.on_callback_query()
 async def cb_handler(client, query: CallbackQuery):
     if query.data == "m1":
-        await query.message.edit_text("**قائمة الإدمنية قادمة..**", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("رجوع", callback_data="main")]]))
+        await query.message.edit_text("**قائمة الإدمنية شغالة يا بطل!**", 
+        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("رجوع", callback_data="main")]]))
     elif query.data == "main":
         await query.message.edit_text(MENU_TEXT, reply_markup=START_BUTTONS)
 
-# هذا السطر هو اللي بيصلح الـ RuntimeError في رندر
+# انتبه هنا: المسافة قبل app.run ضرورية جداً
 if __name__ == "__main__":
     app.run()
