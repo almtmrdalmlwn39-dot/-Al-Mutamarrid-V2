@@ -1,10 +1,21 @@
+import os
+from threading import Thread
+from flask import Flask
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 
-# بياناتك الصحيحة
+# --- سيرفر وهمي لمنع توقف ريندر ---
+flask_app = Flask('')
+@flask_app.route('/')
+def home(): return "البوت يعمل!"
+
+def run(): flask_app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+def keep_alive(): Thread(target=run).start()
+
+# --- بيانات البوت ---
 API_ID = 22610186
 API_HASH = "184e7fd176413cd0d2425494f1796229"
-BOT_TOKEN = "8794844755:AAHA6yvFrM2rEm6A2II1LlenrFOl8ZjfGVE"
+BOT_TOKEN = "8762367853:AAFoyDjc55d0fPTvRThmDFh8_wsQY39Br9g"
 
 app = Client("almtmrd_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
@@ -40,6 +51,6 @@ async def cb_handler(client, query: CallbackQuery):
     elif query.data == "main":
         await query.message.edit_text(MENU_TEXT, reply_markup=START_BUTTONS)
 
-# انتبه هنا: المسافة قبل app.run ضرورية جداً
 if __name__ == "__main__":
+    keep_alive() # تشغيل السيرفر المساعد
     app.run()
