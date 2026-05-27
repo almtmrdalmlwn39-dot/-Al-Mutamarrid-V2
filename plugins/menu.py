@@ -1,5 +1,13 @@
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.enums import ChatMemberStatus
+from config import SUDO_USERS  # استيراد قائمة المطورين من ملف config
+
+# دالة التحقق من الصلاحيات
+async def is_admin(client, chat_id, user_id):
+    if user_id in SUDO_USERS: return True
+    member = await client.get_chat_member(chat_id, user_id)
+    return member.status in [ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]
 
 # القائمة الرئيسية
 @Client.on_message(filters.command("الاوامر", ""))
@@ -14,25 +22,32 @@ async def main_menu(client, message):
     ])
     await message.reply_text(text, reply_markup=keyboard)
 
-# معالجة ضغط الأزرار (النظام التفاعلي)
+# معالجة ضغط الأزرار مع الحماية
 @Client.on_callback_query()
 async def callback_handler(client, query):
     data = query.data
-    
-    # تعريف القائمة الرئيسية للرجوع إليها
-    main_kb = InlineKeyboardMarkup([
-        [InlineKeyboardButton("1", callback_data="m1"), InlineKeyboardButton("2", callback_data="m2"), InlineKeyboardButton("3", callback_data="m3")],
-        [InlineKeyboardButton("4", callback_data="m4"), InlineKeyboardButton("5", callback_data="m5"), InlineKeyboardButton("6", callback_data="m6")],
-        [InlineKeyboardButton("🌐 اوامر Dev", callback_data="dev"), InlineKeyboardButton("🎮 اوامر التسليه", callback_data="games")],
-        [InlineKeyboardButton("💖 اوامر خدميه", callback_data="services")],
-        [InlineKeyboardButton("🛡️ القفل والفتح", callback_data="locks"), InlineKeyboardButton("🔗 التفعيل والتعطيل", callback_data="settings")]
-    ])
+    user_id = query.from_user.id
+    chat_id = query.message.chat.id
 
     if data == "back":
+        main_kb = InlineKeyboardMarkup([
+            [InlineKeyboardButton("1", callback_data="m1"), InlineKeyboardButton("2", callback_data="m2"), InlineKeyboardButton("3", callback_data="m3")],
+            [InlineKeyboardButton("4", callback_data="m4"), InlineKeyboardButton("5", callback_data="m5"), InlineKeyboardButton("6", callback_data="m6")],
+            [InlineKeyboardButton("🌐 اوامر Dev", callback_data="dev"), InlineKeyboardButton("🎮 اوامر التسليه", callback_data="games")],
+            [InlineKeyboardButton("💖 اوامر خدميه", callback_data="services")],
+            [InlineKeyboardButton("🛡️ القفل والفتح", callback_data="locks"), InlineKeyboardButton("🔗 التفعيل والتعطيل", callback_data="settings")]
+        ])
         await query.message.edit_text("**- أهلاً بك عزيزي في قائمة الاوامر :**", reply_markup=main_kb)
         return
 
-    # الأقسام المضافة (الآن كل زر له وظيفة)
+    # أقسام تتطلب صلاحية (الإدارة، المطور، القفل)
+    admin_sections = ["m1", "m2", "m3", "m5", "locks", "settings", "dev"]
+    
+    if data in admin_sections:
+        if not await is_admin(client, chat_id, user_id):
+            return await query.answer("⚠️ عذراً، هذا القسم للمشرفين والمطور فقط!", show_alert=True)
+
+    # محتوى الأقسام
     if data == "m1":
         await query.message.edit_text("**قسم أوامر الأدمنية (1):**\n\n• رفع وتنزيل الرتب\n• مسح الرسائل والمنشئين\n• الطرد والحظر والكتم", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("〈 رجوع", callback_data="back")]]))
     elif data == "m2":
@@ -46,7 +61,7 @@ async def callback_handler(client, query):
     elif data == "m6":
         await query.message.edit_text("**قسم الأوامر الخدمية (6):**\n\n• معلومات الآيدي\n• كشف الطقس", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("〈 رجوع", callback_data="back")]]))
     
-    # الأزرار السفلية
+    # باقي الأزرار العامة
     elif data == "locks":
         await query.message.edit_text("**قسم القفل والفتح الشامل:**\n\n• تحكم كامل في الحماية", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("〈 رجوع", callback_data="back")]]))
     elif data == "settings":
