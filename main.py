@@ -13,9 +13,9 @@ def run(): flask_app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
 def keep_alive(): Thread(target=run).start()
 
 # --- بيانات البوت ---
-API_ID = 22610186
-API_HASH = "184e7fd176413cd0d2425494f1796229"
-BOT_TOKEN = "8762367853:AAFoyDjc55d0fPTvRThmDFh8_wsQY39Br9g"
+API_ID = 26588241
+API_HASH = "b90956461a510523097f48030999554b"
+BOT_TOKEN = "7295980036:AAGR8wQYmX_uS_4-YF2D6tQpB2V_m_e-S_A"
 SUDO_USERS = [7447817025, 6467728995] 
 
 app = Client("almtmrd_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
@@ -23,8 +23,11 @@ app = Client("almtmrd_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKE
 # --- دالة التحقق من الأدمن ---
 async def is_admin(client, chat_id, user_id):
     if user_id in SUDO_USERS: return True
-    member = await client.get_chat_member(chat_id, user_id)
-    return member.status in [ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]
+    try:
+        member = await client.get_chat_member(chat_id, user_id)
+        return member.status in [ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]
+    except:
+        return False
 
 MENU_TEXT = "**- أهلاً بك عزيزي في قائمة الاوامر :**\n━━━━━━━━━━━━"
 START_BUTTONS = InlineKeyboardMarkup([
