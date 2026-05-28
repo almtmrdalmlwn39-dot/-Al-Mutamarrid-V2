@@ -1,10 +1,9 @@
 from pyrogram import Client
 import logging
+import traceback # أضفنا هذه المكتبة
 
-# إعداد السجلات لمراقبة الأخطاء
 logging.basicConfig(level=logging.INFO)
 
-# إعداد البوت
 app = Client(
     "almtmrd_bot",
     api_id=22610186,
@@ -13,7 +12,10 @@ app = Client(
     plugins=dict(root="plugins")
 )
 
-# تشغيل البوت مباشرة
 if __name__ == "__main__":
-    print("البوت بدأ العمل الآن...")
-    app.run()
+    try:
+        print("البوت بدأ العمل الآن...")
+        app.run()
+    except Exception as e:
+        print("--- حدث خطأ قاتل ---")
+        traceback.print_exc() # هذا السطر سيجبر البوت على كتابة نوع الخطأ ومكانه بالتفصيل
