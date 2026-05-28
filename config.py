@@ -2,7 +2,7 @@
 
 API_ID = 22610186
 API_HASH = "184e7fd176413cd0d2425494f1796229"
-BOT_TOKEN = "8762367853:AAFoyDjc55d0fPTvRThmDFh8_wsQY39Br9g" # التوكن الصحيح هنا فقط
+BOT_TOKEN = "8762367853:AAH5769kMPrIrvTGr1aOTYnUwF2nfvzcp4I" # التوكن الصحيح هنا فقط
 
 # قائمة المطورين
 SUDO_USERS = [7447817025, 6467728995] 
