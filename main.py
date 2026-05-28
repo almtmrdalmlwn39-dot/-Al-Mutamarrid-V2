@@ -1,25 +1,29 @@
 import os
-from threading import Thread
 from flask import Flask
 from pyrogram import Client
+from threading import Thread
 
-# 1. إعدادات سيرفر الحماية (Render)
-flask_app = Flask('')
-@flask_app.route('/')
+# 1. إعداد السيرفر
+app_flask = Flask('')
+@app_flask.route('/')
 def home(): return "البوت يعمل الآن!"
-def run(): flask_app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
-def keep_alive(): Thread(target=run).start()
+def run(): app_flask.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
 
-# 2. تعريف البوت (خارج الـ if لضمان تحميل الـ plugins)
+# 2. تشغيل السيرفر في الخلفية
+Thread(target=run).start()
+
+# 3. بيانات البوت الموحدة
+API_ID = 22610186
+API_HASH = "184e7fd176413cd0d2425494f1796229"
+BOT_TOKEN = "8762367853:AAFoyDjc55d0fPTvRThmDFh8_wsQY39Br9g"
+
+# 4. تشغيل البوت (بشكل مباشر)
 app = Client(
     "almtmrd_bot",
-    api_id=22610186,
-    api_hash="184e7fd176413cd0d2425494f1796229",
-    bot_token="8762367853:AAFoyDjc55d0fPTvRThmDFh8_wsQY39Br9g", # تأكد أن هذا هو التوكن الصحيح
+    api_id=API_ID,
+    api_hash=API_HASH,
+    bot_token=BOT_TOKEN,
     plugins=dict(root="plugins")
 )
 
-# 3. التشغيل النهائي
-if __name__ == "__main__":
-    keep_alive()
-    app.run()
+app.run()
