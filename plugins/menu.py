@@ -72,3 +72,7 @@ async def callback_handler(client, query):
         await query.message.edit_text("**قسم التسلية الممتع**", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("〈 رجوع", callback_data="back")]]))
     elif data == "services":
         await query.message.edit_text("**قسم الخدمات**", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("〈 رجوع", callback_data="back")]]))
+# --- إضافة أمر الاختبار للتأكد من أن البوت يسمع ---
+@Client.on_message(filters.text & filters.regex("اختبار"))
+async def test_bot(client, message):
+    await message.reply_text("البوت يعمل بشكل سليم ويسمعك! ✅")
