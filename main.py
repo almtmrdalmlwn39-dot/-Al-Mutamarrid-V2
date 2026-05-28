@@ -9,7 +9,7 @@ app = Client(
     "almtmrd_bot",
     api_id=22610186,
     api_hash="184e7fd176413cd0d2425494f1796229",
-    bot_token="8762367853:AAFoyDjc55d0fPTvRThmDFh8_wsQY39Br9g",
+    bot_token="8762367853:AAH5769kMPrIrvTGr1aOTYnUwF2nfvzcp4I",
     plugins=dict(root="plugins")
 )
 
