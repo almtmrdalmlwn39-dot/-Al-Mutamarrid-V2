@@ -9,7 +9,7 @@ app = Client(
     api_id=22610186, 
     api_hash="184e7fd176413cd0d2425494f1796229", 
     bot_token=TOKEN,
-    plugins=dict(root="plugins") # هذا السطر هو السر!
+    plugins=dict(root="plugins") 
 )
 
 app.run()
