@@ -1,6 +1,8 @@
 from pyrogram import Client
+from aiohttp import web
+import asyncio
 import logging
-import traceback # أضفنا هذه المكتبة
+import traceback
 
 logging.basicConfig(level=logging.INFO)
 
@@ -12,10 +14,25 @@ app = Client(
     plugins=dict(root="plugins")
 )
 
+async def handle(request):
+    return web.Response(text="Bot is running")
+
+async def run_bot():
+    # تشغيل سيرفر الويب الوهمي لإرضاء Render
+    app_web = web.Application()
+    app_web.add_routes([web.get('/', handle)])
+    runner = web.AppRunner(app_web)
+    await runner.setup()
+    site = web.TCPSite(runner, '0.0.0.0', 8080)
+    await site.start()
+    
+    # تشغيل البوت
+    await app.start()
+    print("البوت بدأ العمل الآن بنجاح!")
+    await asyncio.gather(app.idle())
+
 if __name__ == "__main__":
     try:
-        print("البوت بدأ العمل الآن...")
-        app.run()
-    except Exception as e:
-        print("--- حدث خطأ قاتل ---")
-        traceback.print_exc() # هذا السطر سيجبر البوت على كتابة نوع الخطأ ومكانه بالتفصيل
+        asyncio.run(run_bot())
+    except Exception:
+        traceback.print_exc()
