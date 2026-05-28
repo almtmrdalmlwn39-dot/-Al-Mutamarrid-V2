@@ -76,3 +76,7 @@ async def callback_handler(client, query):
 @Client.on_message(filters.text & filters.regex("اختبار"))
 async def test_bot(client, message):
     await message.reply_text("البوت يعمل بشكل سليم ويسمعك! ✅")
+# --- إضافة أمر التفعيل ---
+@Client.on_message(filters.text & filters.regex("تفعيل"))
+async def activate_bot(client, message):
+    await message.reply_text("تم تفعيل بوت المتمرد للحماية في هذه المجموعة بنجاح! ✅")
