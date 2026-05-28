@@ -1,31 +1,32 @@
 import os
-from pyrogram import Client
+from pyrogram import Client, filters
 from aiohttp import web
 
-# إعداد المنفذ الذي يطلبه Render
+# إعداد المنفذ
 PORT = int(os.environ.get("PORT", 8080))
 
-async def handle(request):
-    return web.Response(text="Bot is running")
-
+# إعداد البوت
 app = Client(
     "my_bot", 
     api_id=22610186, 
     api_hash="184e7fd176413cd0d2425494f1796229", 
-    bot_token="8762367853:AAH5769kMPrIrvTGr1aOTYnUwF2nfvzcp4I",
-    plugins=dict(root="plugins") 
+    bot_token="8762367853:AAH5769kMPrIrvTGr1aOTYnUwF2nfvzcp4I"
 )
 
+# أمر تجريبي بسيط
+@app.on_message(filters.command("اختبار"))
+async def test(client, message):
+    await message.reply_text("البوت يعمل! ✅")
+
+# تشغيل البوت مع الويب
 async def start_bot():
-    # تشغيل خادم الويب لاسترضاء Render
-    runner = web.AppRunner(web.Application())
+    app_web = web.Application()
+    runner = web.AppRunner(app_web)
     await runner.setup()
     site = web.TCPSite(runner, '0.0.0.0', PORT)
     await site.start()
-    
-    # تشغيل البوت
     await app.start()
-    print("البوت يعمل الآن!")
+    print("البوت جاهز للعمل!")
     await app.idle()
 
 if __name__ == "__main__":
