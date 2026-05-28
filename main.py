@@ -1,8 +1,20 @@
-from pyrogram import Client
+import os
+import asyncio
 from flask import Flask
+from pyrogram import Client
 from threading import Thread
 
-# 1. تعريف البوت
+# 1. إعداد السيرفر ليعمل في خيط منفصل (Thread)
+app_flask = Flask('')
+@app_flask.route('/')
+def home(): return "البوت يعمل!"
+
+def run_server():
+    app_flask.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+
+Thread(target=run_server).start()
+
+# 2. إعداد البوت
 app = Client(
     "almtmrd_bot",
     api_id=22610186,
@@ -11,16 +23,11 @@ app = Client(
     plugins=dict(root="plugins")
 )
 
-# 2. تعريف السيرفر (بسيط جداً)
-server = Flask(__name__)
-@server.route("/")
-def home():
-    return "البوت يعمل!"
-
-# 3. تشغيل السيرفر في خلفية منفصلة
-def run_server():
-    server.run(host="0.0.0.0", port=8080)
+# 3. تشغيل البوت بطريقة متوافقة مع الـ Event Loop
+async def main():
+    await app.start()
+    print("البوت بدأ العمل!")
+    await asyncio.Event().wait()
 
 if __name__ == "__main__":
-    Thread(target=run_server).start()
-    app.run()
+    asyncio.run(main())
