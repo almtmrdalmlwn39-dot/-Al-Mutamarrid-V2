@@ -7,4 +7,5 @@ BOT_TOKEN = "8762367853:AAFoyDjc55d0fPTvRThmDFh8_wsQY39Br9g" # التوكن ال
 # قائمة المطورين
 SUDO_USERS = [7447817025, 6467728995] 
 SUDO_USERNAMES = ["@A0_O7", "@Vi_ti0"]
+# قناة البوت
 CHANNEL_LINK = "https://t.me/bedmoddinnow"
