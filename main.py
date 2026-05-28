@@ -6,24 +6,23 @@ from threading import Thread
 # 1. إعداد السيرفر
 app_flask = Flask('')
 @app_flask.route('/')
-def home(): return "البوت يعمل الآن!"
-def run(): app_flask.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+def home():
+    return "البوت يعمل الآن!"
 
-# 2. تشغيل السيرفر في الخلفية
-Thread(target=run).start()
+def run_server():
+    app_flask.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
 
-# 3. بيانات البوت الموحدة
-API_ID = 22610186
-API_HASH = "184e7fd176413cd0d2425494f1796229"
-BOT_TOKEN = "8762367853:AAFoyDjc55d0fPTvRThmDFh8_wsQY39Br9g"
+# 2. تشغيل السيرفر في Thread منفصل
+Thread(target=run_server).start()
 
-# 4. تشغيل البوت (بشكل مباشر)
+# 3. إعداد البوت
 app = Client(
     "almtmrd_bot",
-    api_id=API_ID,
-    api_hash=API_HASH,
-    bot_token=BOT_TOKEN,
+    api_id=22610186,
+    api_hash="184e7fd176413cd0d2425494f1796229",
+    bot_token="8762367853:AAFoyDjc55d0fPTvRThmDFh8_wsQY39Br9g",
     plugins=dict(root="plugins")
 )
 
+# 4. تشغيل البوت الأساسي
 app.run()
